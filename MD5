@@ -1,4 +1,4 @@
-9b5e7c30ad21d50727914f7d10c66c46 *DESCRIPTION
+dfc0084837c3de9a6a6821d87208cdd0 *DESCRIPTION
 7b657cb298d46b4eb15c8301b58d97fa *NAMESPACE
 2d1c4a351d4c95ec9d0195e6d4e73572 *R/RcppExports.R
 97b787b1ef60ce24834b7929148d4d5e *R/package.R
@@ -8,11 +8,11 @@ dce0fe168f2f382a2ca6662c366ae472 *configure
 77cfa9b4acb9698c04d0391cdbfe8513 *configure.ac
 7b88a76d7e87a4274efa17bf0baaeeef *inst/doc/fRLR.R
 63acfa86705c796fa2d8f778dd9ff993 *inst/doc/fRLR.Rmd
-b9ab96e48837eeaccf38dccaab4912b4 *inst/doc/fRLR.html
+bcf416c393e973660311b2bcba07e875 *inst/doc/fRLR.html
 56ef34e025516e189c8bacefa250d497 *man/fRLR-package.Rd
 69435b2ce78d06f610feb8ea7919a78c *man/frlr1.Rd
 7384400ca344c5fe999c0d555d9ef1e6 *man/frlr2.Rd
-661751f524cbe4ef7a30a387c3229c67 *src/Makevars.in
+bf9f2429b589a4533ae24a52198d2c8f *src/Makevars.in
 4fac8eb9bdf05e9eb0d3646e789dc9c1 *src/Makevars.win
 37ede03b8bb8063cf1dbd5a2f93baa00 *src/RcppExports.cpp
 fd67c08ef87350adbe315abb73d34e53 *src/frlr.cpp
