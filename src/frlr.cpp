@@ -75,6 +75,7 @@ int get_col_from_matrix(const vector<double> &m, size_t nrow, size_t ncol, size_
 //' @param R_X the observation matrix
 //' @param R_Y the response
 //' @param R_COV common variables
+//' @param num_threads number of threads for openmp. If it is -1 (default), it will use all possible threads.
 //' @return the fitting results for each regression.
 //' @examples
 //' set.seed(123)
@@ -84,8 +85,13 @@ int get_col_from_matrix(const vector<double> &m, size_t nrow, size_t ncol, size_
 //' frlr1(X, Y, COV)
 //' @export
 // [[Rcpp::export]]
-Rcpp::List frlr1(SEXP R_X, SEXP R_Y, SEXP R_COV)
+Rcpp::List frlr1(SEXP R_X, SEXP R_Y, SEXP R_COV, int num_threads = -1)
 {
+  if (num_threads > 0) {
+#ifdef _OPENMP
+    omp_set_num_threads(num_threads);
+#endif
+  }
   // convert data type
   Rcpp::NumericVector rX(R_X);
   Rcpp::NumericVector Y(R_Y);
@@ -136,8 +142,10 @@ Rcpp::List frlr1(SEXP R_X, SEXP R_Y, SEXP R_COV)
   // inv(B) by LU decomposition
   gsl_linalg_LU_decomp(B, permutation_B, &status);
   gsl_linalg_LU_invert(B, permutation_B, invB);
-
+  
+#ifdef _OPENMP
   # pragma omp parallel for schedule(dynamic) // faster!!!
+#endif
   for (int j = 0; j < ncol; j++)
   {
     // the identical terms
@@ -246,6 +254,7 @@ Rcpp::List frlr1(SEXP R_X, SEXP R_Y, SEXP R_COV)
 //' @param R_idx2 the second identical feature
 //' @param R_Y the response variable
 //' @param R_COV common variables
+//' @param num_threads number of threads for openmp. If it is -1 (default), it will use all possible threads.
 //' @return the fitting results for each regression.
 //' @examples
 //' set.seed(123)
@@ -254,11 +263,16 @@ Rcpp::List frlr1(SEXP R_X, SEXP R_Y, SEXP R_COV)
 //' COV = matrix(rnorm(40), 10, 4)
 //' idx1 = c(1, 2, 3, 4, 1, 1, 1, 2, 2, 3)
 //' idx2 = c(2, 3, 4, 5, 3, 4, 5, 4, 5, 5)
-//' frlr2(t(X), idx1, idx2, Y, t(COV))
+//' frlr2(X, idx1, idx2, Y, COV)
 //' @export
 // [[Rcpp::export]]
-Rcpp::List frlr2(SEXP R_X, SEXP R_idx1, SEXP R_idx2, SEXP R_Y, SEXP R_COV)
+Rcpp::List frlr2(SEXP R_X, SEXP R_idx1, SEXP R_idx2, SEXP R_Y, SEXP R_COV, int num_threads = -1)
 {
+  if (num_threads > 0) {
+#ifdef _OPENMP
+    omp_set_num_threads(num_threads);
+#endif
+  }
   // gsl_matrix is row-major order
 
   // convert data type
@@ -320,7 +334,9 @@ Rcpp::List frlr2(SEXP R_X, SEXP R_idx1, SEXP R_idx2, SEXP R_Y, SEXP R_COV)
   gsl_linalg_LU_decomp(B, permutation_B, &status);
   gsl_linalg_LU_invert(B, permutation_B, invB);
 
+#ifdef _OPENMP
   # pragma omp parallel for schedule(dynamic) // faster!!!
+#endif
   for (int j = 0; j < n; j++)
   {
     // the identical terms
@@ -458,13 +474,6 @@ Rcpp::List frlr2(SEXP R_X, SEXP R_idx1, SEXP R_idx2, SEXP R_Y, SEXP R_COV)
     gsl_matrix_free(m_tmp2);
     gsl_matrix_free(m_tmp3);
     gsl_matrix_free(m_tmp4);
-    #pragma omp critical
-    {
-      r1.push_back(idx1[j]);
-      r2.push_back(idx2[j]);
-      r1_p.push_back(pvalue1);
-      r2_p.push_back(pvalue2);
-    }
     r1[j] = idx1[j];
     r2[j] = idx2[j];
     r1_p[j] = pvalue1;

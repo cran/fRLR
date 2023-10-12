@@ -4,7 +4,7 @@
 \alias{frlr2}
 \title{Fit Repeated Linear Regressions with Two Variables}
 \usage{
-frlr2(R_X, R_idx1, R_idx2, R_Y, R_COV)
+frlr2(R_X, R_idx1, R_idx2, R_Y, R_COV, num_threads = -1L)
 }
 \arguments{
 \item{R_X}{the observation matrix}
@@ -16,6 +16,8 @@ frlr2(R_X, R_idx1, R_idx2, R_Y, R_COV)
 \item{R_Y}{the response variable}
 
 \item{R_COV}{common variables}
+
+\item{num_threads}{number of threads for openmp. If it is -1 (default), it will use all possible threads.}
 }
 \value{
 the fitting results for each regression.
@@ -30,5 +32,5 @@ Y = rnorm(10)
 COV = matrix(rnorm(40), 10, 4)
 idx1 = c(1, 2, 3, 4, 1, 1, 1, 2, 2, 3)
 idx2 = c(2, 3, 4, 5, 3, 4, 5, 4, 5, 5)
-frlr2(t(X), idx1, idx2, Y, t(COV))
+frlr2(X, idx1, idx2, Y, COV)
 }
